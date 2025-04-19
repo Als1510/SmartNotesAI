@@ -6,6 +6,7 @@ import SearchBar from './components/SearchBar';
 import { generateTitle, generateTitleAndTags } from './services/aiService';
 
 function App() {
+  const [loading, setLoading] = useState(false);
   const [noteTitle, setNoteTitle] = useState('');
   const [notes, setNotes] = useState(() => {
     const saved = localStorage.getItem('notes');
@@ -18,6 +19,7 @@ function App() {
   const handleAddNote = async () => {
     if (!noteContent.trim()) return;
 
+    setLoading(true);
     const finalTitle = noteTitle.trim() || await generateTitle(noteContent);
     const { tags } = await generateTitleAndTags(noteContent);
     console.log(tags)
@@ -29,6 +31,7 @@ function App() {
 
     setNoteContent('');
     setNoteTitle('');
+    setLoading(false);
   };
 
   const handleDelete = (id) => {
@@ -46,7 +49,8 @@ function App() {
   const handleSaveEdit = async () => {
     if (!noteContent.trim()) return;
 
-    const finalTitle = noteTitle.trim() || 'Untitled Note';
+    setLoading(true);
+    const finalTitle = noteTitle.trim() || await generateTitle(noteContent);
     const { tags } = await generateTitleAndTags(noteContent);
 
     const updatedNotes = notes.map((note) =>
@@ -57,6 +61,7 @@ function App() {
     setEditingNote(null);
     setNoteTitle('');
     setNoteContent('');
+    setLoading(false);
   };
 
   const filteredNotes = notes.filter(note =>
@@ -66,6 +71,9 @@ function App() {
 
   return (
     <div className="container py-5">
+      {loading ? (
+        <div className="loader">Generating title...</div>
+      ) : ''}
       <h1 className="mb-4 text-left">🧠 Smart Notes with AI</h1>
 
       <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
