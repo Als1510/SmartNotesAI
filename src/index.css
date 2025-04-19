@@ -1,0 +1,13 @@
+:root {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.emoji-picker-container {
+  position: absolute;
+  bottom: 70px;
+  /* Adjust this based on your layout */
+  right: 20px;
+  z-index: 1000;
+}
